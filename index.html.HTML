@@ -1,0 +1,166 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Chuck Norris Joke Page</title>
+
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      background-color: #f4f4f4;
+      margin: 0;
+      padding: 0;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      flex-direction: column;
+      min-height: 100vh;
+    }
+
+    #container {
+      text-align: center;
+      background-color: #fff;
+      padding: 20px;
+      border-radius: 8px;
+      box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+    }
+
+    .section {
+      margin-bottom: 20px;
+    }
+
+    h1 {
+      color: #333;
+    }
+
+    img {
+      width: 170px;
+      height: 150px;
+      margin-bottom: 10px;
+    }
+
+    button {
+      cursor: pointer;
+    }
+
+    footer {
+      font-family: Arial, sans-serif;
+      background-color: #f4f4f4;
+      margin-top: 20px;
+      padding: 10px;
+      width: 100%;
+      text-align: center;
+    }
+  </style>
+</head>
+
+<body>
+
+  <div id="container">
+
+    <div class="section">
+      <h1>Chuck Norris Joke</h1>
+      <img id="jokeIcon" src="chucknorris_logo_coloured_small@2x.png" alt="Chuck Norris Icon">
+      <p id="randomJoke"></p>
+      <button onclick="getRandomChuckNorrisJoke()">Get me a new one</button>
+    </div>
+
+    <div class="section">
+      <h1>Chuck Norris Joke by Category</h1>
+      <label for="categorySelect">Select a category:</label>
+      <select id="categorySelect"></select>
+      <p id="categoryJoke"></p>
+      <button onclick="getChuckNorrisJokeByCategory()">Get me a new one</button>
+    </div>
+
+    <div class="section">
+      <h1>Chuck Norris Joke App</h1>
+      <label for="searchQuery">Search for a joke:</label>
+      <input type="text" id="searchQuery">
+      <button onclick="searchChuckNorrisJoke()">Search</button>
+      <p id="searchJoke"></p>
+    </div>
+
+    <div class="section" id="documentation">
+      <h3>Chuck Norris Jokes API</h3>
+      <p>Esta página utiliza a Chuck Norris Jokes API para obter piadas aleatórias do Chuck Norris. A API oferece as seguintes funcionalidades:</p>
+      <ul>
+        <li><strong>Obter piada aleatória por categoria:</strong> Clique em uma categoria para obter uma piada relacionada.</li>
+        <li><strong>Obter lista de categorias:</strong> Clique nos botões para carregar piadas de categorias específicas.</li>
+        <li><strong>Mais informações:</strong> <a href="https://api.chucknorris.io/" target="_blank">https://api.chucknorris.io/</a></li>
+      </ul>
+    </div>
+
+  </div>
+
+  <script>
+    function getRandomChuckNorrisJoke() {
+      const apiUrl = "https://api.chucknorris.io/jokes/random";
+      fetch(apiUrl)
+        .then(response => response.json())
+        .then(data => {
+          document.getElementById("randomJoke").textContent = data.value;
+        })
+        .catch(error => console.error("Error fetching Chuck Norris joke:", error));
+    }
+
+    function getChuckNorrisCategories() {
+      const apiUrl = "https://api.chucknorris.io/jokes/categories";
+      fetch(apiUrl)
+        .then(response => response.json())
+        .then(categories => {
+          const categorySelect = document.getElementById("categorySelect");
+          categories.forEach(category => {
+            const option = document.createElement("option");
+            option.value = category;
+            option.textContent = category;
+            categorySelect.appendChild(option);
+          });
+        })
+        .catch(error => console.error("Error fetching Chuck Norris categories:", error));
+    }
+
+    function getChuckNorrisJokeByCategory() {
+      const category = document.getElementById("categorySelect").value;
+      const apiUrl = `https://api.chucknorris.io/jokes/random?category=${category}`;
+      fetch(apiUrl)
+        .then(response => response.json())
+        .then(data => {
+          document.getElementById("categoryJoke").textContent = data.value;
+        })
+        .catch(error => console.error("Error fetching Chuck Norris joke:", error));
+    }
+
+    function searchChuckNorrisJoke() {
+      const query = document.getElementById("searchQuery").value;
+      const apiUrl = `https://api.chucknorris.io/jokes/search?query=${query}`;
+      fetch(apiUrl)
+        .then(response => response.json())
+        .then(data => {
+          if (data.result.length > 0) {
+            const randomIndex = Math.floor(Math.random() * data.result.length);
+            const randomJoke = data.result[randomIndex];
+            document.getElementById("searchJoke").textContent = randomJoke.value;
+          } else {
+            alert("No Chuck Norris joke found for the given query.");
+          }
+        })
+        .catch(error => console.error("Error searching Chuck Norris joke:", error));
+    }
+
+    document.addEventListener("DOMContentLoaded", () => {
+      getRandomChuckNorrisJoke();
+      getChuckNorrisCategories();
+      getChuckNorrisJokeByCategory();
+    });
+  </script>
+
+  <footer>
+    <p>Desenvolvido por Luiz Augusto Lise</p>
+  </footer>
+
+</body>
+
+</html>
